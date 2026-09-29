@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwipeCode - Master Technical Interviews in 60-Second Swipes</title>
+  
+  <!-- Primary Meta Tags -->
+  <meta name="title" content="SwipeCode - Master Technical Interviews in 60-Second Swipes">
+  <meta name="description" content="Adaptive Spaced Repetition, Job Description Customization, and AI Technical Tutoring for software engineers. Download the Android APK now.">
+  
+  <!-- Open Graph / Facebook / WhatsApp -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://tusharamd.github.io/SwipeCode_Release/">
+  <meta property="og:title" content="SwipeCode — Adaptive Technical Microlearning">
+  <meta property="og:description" content="Master engineering interviews in 60-second swipes. Spaced repetition + Gemini AI Tutor on Android.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/TusharAMD/SwipeCode_Release/main/icon.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0A0D14;
+      --bg-card: #121624;
+      --bg-card-subtle: #181D30;
+      --primary: #6366F1;
+      --primary-glow: rgba(99, 102, 241, 0.4);
+      --secondary: #00F0FF;
+      --secondary-glow: rgba(0, 240, 255, 0.35);
+      --purple: #A855F7;
+      --flame: #FF5E3A;
+      --text-main: #FFFFFF;
+      --text-muted: #94A3B8;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(99, 102, 241, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Ambient Glow Backgrounds */
+    .glow-bg {
+      position: fixed;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .glow-circle-1 {
+      position: absolute;
+      top: -150px;
+      left: 15%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.18) 0%, rgba(10, 13, 20, 0) 70%);
+      border-radius: 50%;
+      filter: blur(80px);
+    }
+
+    .glow-circle-2 {
+      position: absolute;
+      top: 300px;
+      right: 10%;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 240, 255, 0.12) 0%, rgba(10, 13, 20, 0) 70%);
+      border-radius: 50%;
+      filter: blur(90px);
+    }
+
+    /* Header Nav */
+    nav {
+      position: sticky;
+      top: 0;
+      backdrop-filter: blur(16px);
+      background: rgba(10, 13, 20, 0.75);
+      border-bottom: 1px solid var(--border);
+      z-index: 50;
+      padding: 16px 24px;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand img {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      box-shadow: 0 0 16px var(--primary-glow);
+    }
+
+    .brand-name {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, #FFFFFF 40%, #A5B4FC 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .nav-link:hover {
+      color: #FFFFFF;
+    }
+
+    .nav-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 4px 14px var(--primary-glow);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+
+    /* Main Container */
+    main {
+      position: relative;
+      z-index: 10;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* Hero Section */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+      padding: 40px 0 80px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid var(--border-active);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #C7D2FE;
+      margin-bottom: 24px;
+    }
+
+    .hero-badge span.pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: #10B981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10B981;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+    }
+
+    .hero-title {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -1.5px;
+      margin-bottom: 20px;
+    }
+
+    .hero-title .gradient-text {
+      background: linear-gradient(135deg, #00F0FF 0%, #818CF8 50%, #C084FC 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 36px;
+      max-width: 540px;
+    }
+
+    /* Download Box */
+    .download-card {
+      background: linear-gradient(180deg, rgba(26, 32, 54, 0.9) 0%, rgba(18, 22, 36, 0.9) 100%);
+      border: 1px solid var(--border-active);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .download-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, #00F0FF 0%, #6366F1 50%, #A855F7 100%);
+      color: #0A0D14;
+      font-size: 17px;
+      font-weight: 800;
+      padding: 16px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      box-shadow: 0 8px 24px var(--primary-glow);
+      transition: all 0.25s ease;
+      flex: 1;
+      justify-content: center;
+      min-width: 240px;
+    }
+
+    .btn-download:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px var(--primary-glow);
+      filter: brightness(1.08);
+    }
+
+    .btn-github {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      padding: 16px 22px;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      justify-content: center;
+    }
+
+    .btn-github:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .download-meta {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+    }
+
+    .download-meta div {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Interactive Phone Mockup */
+    .phone-container {
+      display: flex;
+      justify-content: center;
+      perspective: 1000px;
+    }
+
+    .phone-frame {
+      width: 320px;
+      height: 640px;
+      background: #000000;
+      border-radius: 44px;
+      padding: 12px;
+      border: 3px solid #2A324B;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 50px rgba(99, 102, 241, 0.2);
+      position: relative;
+      transform: rotateY(-8deg) rotateX(6deg);
+      transition: transform 0.4s ease;
+    }
+
+    .phone-frame:hover {
+      transform: rotateY(0deg) rotateX(0deg);
+    }
+
+    .phone-screen {
+      width: 100%;
+      height: 100%;
+      background: #0A0D14;
+      border-radius: 34px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      position: relative;
+    }
+
+    /* Mock Card Content */
+    .mock-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      background: #141A29;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      margin-bottom: 12px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mock-card {
+      background: #121624;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .mock-tag {
+      align-self: flex-start;
+      font-size: 10px;
+      font-weight: 800;
+      background: rgba(99, 102, 241, 0.2);
+      color: #A5B4FC;
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .mock-title {
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .mock-prompt {
+      font-size: 12px;
+      color: #CBD5E1;
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+
+    .mock-code {
+      background: #080A0F;
+      border-radius: 10px;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: #38BDF8;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      line-height: 1.4;
+    }
+
+    .mock-option {
+      background: #181E30;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 10px;
+      margin-bottom: 6px;
+      font-size: 10.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #E2E8F0;
+    }
+
+    .mock-option.correct {
+      border-color: #10B981;
+      background: rgba(16, 185, 129, 0.12);
+      color: #34D399;
+    }
+
+    /* Feature Grid */
+    .features-section {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 600px;
+      margin: 0 auto 56px;
+    }
+
+    .section-tag {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--secondary);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-active);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Install Steps */
+    .install-section {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 36px;
+      margin: 40px 0 80px;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      margin-top: 36px;
+    }
+
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .step-number {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+    }
+
+    .step-title {
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .step-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 36px 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: #A5B4FC;
+      text-decoration: none;
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+      }
+      .hero-desc {
+        margin: 0 auto 32px;
+      }
+      .hero-badge {
+        margin: 0 auto 20px;
+      }
+      .download-card {
+        text-align: left;
+      }
+      .hero-title {
+        font-size: 38px;
+      }
+      .phone-frame {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Ambient Glow -->
+  <div class="glow-bg">
+    <div class="glow-circle-1"></div>
+    <div class="glow-circle-2"></div>
+  </div>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <img src="icon.png" alt="SwipeCode Logo">
+        <span class="brand-name">SwipeCode</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#install" class="nav-link">Installation</a>
+        <a href="https://github.com/TusharAMD/SwipeCode_Release" target="_blank" class="nav-link">GitHub</a>
+        <a href="https://github.com/TusharAMD/SwipeCode_Release/releases/latest/download/app-release.apk" class="nav-btn">
+          ⬇️ Download APK
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-left">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          <span>v1.0.0 Android Standalone Release</span>
+        </div>
+        
+        <h1 class="hero-title">
+          Master Tech Interviews in <span class="gradient-text">60-Second Swipes</span>
+        </h1>
+        
+        <p class="hero-desc">
+          SwipeCode transforms technical interview prep into an addictive, swipeable daily habit. Powered by adaptive spaced repetition, JD customization, and real-time Gemini AI tutoring.
+        </p>
+
+        <div class="download-card">
+          <div class="download-buttons">
+            <a href="https://github.com/TusharAMD/SwipeCode_Release/releases/latest/download/app-release.apk" class="btn-download">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download APK (Direct)
+            </a>
+            <a href="https://github.com/TusharAMD/SwipeCode_Release" target="_blank" class="btn-github">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              Release Repo
+            </a>
+          </div>
+          <div class="download-meta">
+            <div>🤖 <strong>Android 8.0+</strong> (ARM64 / Universal)</div>
+            <div>⚡ <strong>Latency:</strong> &lt; 30ms (Cloud Run)</div>
+            <div>🔒 <strong>Open Source & Safe</strong></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phone Card Mockup -->
+      <div class="phone-container">
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="mock-hud">
+              <span>💼 Senior Python / Backend</span>
+              <span style="color: #FF5E3A;">🔥 5 Day Streak</span>
+            </div>
+
+            <div class="mock-card">
+              <span class="mock-tag">FastAPI • Concurrency</span>
+              <div class="mock-title">Async Event Loop Mechanics</div>
+              <div class="mock-prompt">
+                What is the consequence of calling a synchronous <code>time.sleep()</code> inside an <code>async def</code> route handler?
+              </div>
+              <div class="mock-code">
+@app.get("/data")<br>
+async def get_data():<br>
+&nbsp;&nbsp;time.sleep(2) # Blocking!<br>
+&nbsp;&nbsp;return {"ok": True}
+              </div>
+
+              <div class="mock-option correct">
+                <span>✓</span> Blocks main event loop thread for all requests
+              </div>
+              <div class="mock-option">
+                <span>○</span> Spawns a background threadpool automatically
+              </div>
+              <div class="mock-option">
+                <span>○</span> Causes immediate 500 server crash
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+      <div class="section-header">
+        <div class="section-tag">Engineered for Retention</div>
+        <h2 class="section-title">Built Different Than Traditional LeetCode</h2>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3 class="feature-title">SM-2 Spaced Repetition</h3>
+          <p class="feature-desc">Target your weak areas dynamically. Questions repeat on optimized intervals (1d, 3d, 7d) until concepts are permanent in long-term memory.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">💼</div>
+          <h3 class="feature-title">Job Description Tailoring</h3>
+          <p class="feature-desc">Paste any LinkedIn/Indeed Job Description or select curated templates. The AI generates custom interview questions covering the exact requirements.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">✨</div>
+          <h3 class="feature-title">Gemini AI Technical Tutor</h3>
+          <p class="feature-desc">Stuck on a tricky concept? Open the AI Mentor drawer for instant under-the-hood breakdowns, analogies, and edge-case code snippets.</p>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3 class="feature-title">Ultra-Fast 25ms Response</h3>
+          <p class="feature-desc">Hosted on Google Cloud Run with co-located Supabase PostgreSQL in Mumbai, delivering instant swiping and offline-ready responsiveness.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="install" class="install-section">
+      <div class="section-header" style="margin-bottom: 0;">
+        <div class="section-tag">Direct Install</div>
+        <h2 class="section-title">How to Install on Android</h2>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <div class="step-title">Download the APK</div>
+          <div class="step-desc">Tap the <strong>Download APK</strong> button above directly on your Android phone's browser.</div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <div class="step-title">Allow Unknown Sources</div>
+          <div class="step-desc">When prompted by Chrome/Android, enable <em>"Install unknown apps"</em> for your browser or file manager.</div>
+        </div>
+
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <div class="step-title">Open & Master Skills</div>
+          <div class="step-desc">Launch SwipeCode, select your core skills or target JD, and start your first 60-second learning streak!</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2026 SwipeCode • Developed by <a href="https://github.com/TusharAMD" target="_blank">Tushar Amdoskar</a> • Open Source Technical Revision Platform</p>
+  </footer>
+
+</body>
+</html>
